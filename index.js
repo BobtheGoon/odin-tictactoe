@@ -3,7 +3,7 @@ const playerFactory = (name, marker) => {
 }
 
 
-const GameBoard = (() => {
+const GameBoard = () => {
   const board = [[[], [], []], [[], [], []], [[], [], []]]
 
   const getBoard = () => board
@@ -11,20 +11,29 @@ const GameBoard = (() => {
   const updateCell = (cellCoord, marker) => {
       //cellCord contains array position as a tuple (y, x) and marker is either x or o
       const [y, x] = cellCoord
-      board[y][x] = marker
+
+      //Check if cell already contains a mark
+      if (!Array.isArray(board[y][x])) {
+        console.log('Already used!')
+        //We need to ask the GameController for a new coordinate!
+      }
+      
+      else {
+        board[y][x] = marker
+      }
   }
 
   const printBoard = () => {
     const boardWithValues = board.map((row => row.map(cell => cell)))
-    return boardWithValues
+    console.log(boardWithValues)
   }
 
   return {getBoard, updateCell, printBoard}
-})();
+};
 
 
 const GameController = (playerOneName, playerTwoName) => {
-  const board = GameBoard
+  const board = GameBoard()
 
   //Create players and assign correct marks
   const players = [
