@@ -11,16 +11,7 @@ const GameBoard = () => {
   const updateCell = (cellCoord, marker) => {
       //cellCord contains array position as a tuple (y, x) and marker is either x or o
       const [y, x] = cellCoord
-
-      //Check if cell already contains a mark
-      if (!Array.isArray(board[y][x])) {
-        console.log('Already used!')
-        //We need to ask the GameController for a new coordinate!
-      }
-      
-      else {
-        board[y][x] = marker
-      }
+      board[y][x] = marker
   }
 
   const printBoard = () => {
@@ -53,16 +44,23 @@ const GameController = (playerOneName, playerTwoName) => {
       console.log(`${getActivePlayer().name}'s turn.`);
     };
 
+  const checkForWin = () => {}
+
   const playRound = (cellCoord) => {
     let marker = getActivePlayer().marker
     
+    //Check if cell already contains a mark
+    if (!Array.isArray(board[y][x])) {
+      console.log('Already used!')
+      //Ask for new coordinates
+    }
+
+
     board.updateCell(cellCoord, marker)
 
     switchActivePlayer()
     printNewRound()
   }
-
-  const checkForWin = () => {}
 
   return {getActivePlayer, playRound}
 };
@@ -72,5 +70,3 @@ const DisplayController = () => {} //We will finish this when working on the GUI
 
 
 let game = GameController('Bob', 'Alice')
-
-
