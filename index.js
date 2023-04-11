@@ -7,6 +7,8 @@ const GameBoard = () => {
   const board = [[[], [], []], [[], [], []], [[], [], []]]
 
   const getBoard = () => board
+
+  const getBoardCell = (y, x) => board[y][x]
   
   const updateCell = (cellCoord, marker) => {
       //cellCord contains array position as a tuple (y, x) and marker is either x or o
@@ -19,7 +21,7 @@ const GameBoard = () => {
     console.log(boardWithValues)
   }
 
-  return {getBoard, updateCell, printBoard}
+  return {getBoard, updateCell, getBoardCell, printBoard}
 };
 
 
@@ -46,17 +48,25 @@ const GameController = (playerOneName, playerTwoName) => {
 
   const checkForWin = () => {}
 
-  const playRound = (cellCoord) => {
+  //This function takes the coordinates from selected cell, currently prompting for user input
+  const selectCoords = () => {
+    return [y, x] = prompt().split(' ')
+  }
+
+  const playRound = () => {
     let marker = getActivePlayer().marker
-    
-    //Check if cell already contains a mark
-    if (!Array.isArray(board[y][x])) {
+    let [y, x] = selectCoords()
+
+    //Check if cell already contains a mark, if so ask for new coordinates
+    while (!Array.isArray(board.getBoardCell(y, x))) {
       console.log('Already used!')
       //Ask for new coordinates
+      const [newY, newX] = selectCoords()
+      y = newY
+      x = newX
     }
 
-
-    board.updateCell(cellCoord, marker)
+    board.updateCell([y, x], marker)
 
     switchActivePlayer()
     printNewRound()
