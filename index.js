@@ -46,7 +46,16 @@ const GameController = (playerOneName, playerTwoName) => {
       console.log(`${getActivePlayer().name}'s turn.`);
     };
 
-  const checkForWin = () => {}
+  const hasPlayerWon = (board) => {
+    //Loop through each row and check if the markers are the same
+    board.forEach(row => {
+      
+    });
+
+    //Loop through each column and check if the markers are the same
+
+    //Loop through the diagonals and check if the markers are the same
+  }
 
   //This function takes the coordinates from selected cell, currently prompting for user input
   const selectCoords = () => {
@@ -67,6 +76,7 @@ const GameController = (playerOneName, playerTwoName) => {
     }
 
     board.updateCell([y, x], marker)
+    console.log(hasPlayerWon(board.getBoard()))
 
     switchActivePlayer()
     printNewRound()
