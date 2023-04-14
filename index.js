@@ -21,9 +21,54 @@ const GameBoard = () => {
     console.log(boardWithValues)
   }
 
+  const checkForWin = () => {
+    const checkRowsForWin = () => {
+      //We need a flag, since we cannot return from a forEach loop
+      let won = false
+      //Loop through each row and check if the markers are the same
+      board.forEach(row => {
+        if (row[0] === row[1] && row[1] === row[2]) won = true
+      })
+      return won
+    }
+
+    const checkColumnsForWin = () => {
+      //Loop through each column and check if the markers are the same
+      for (i = 0; i < board.length; ++i) {
+        //Check that the other cells of the column contain the same marker, i === 0 since we only need to loop over one row
+        if (i === 0) {
+          for (j = 0; j < board[i].length; ++j) {
+            if (board[i][j] === board[i+1][j] && board[i+1][j] === board[i+2][j]) return true
+          }
+        }
+      }
+      return false
+    }
+
+    const checkDiagonalsForWin = () => {
+      //Loop through the diagonals and check if the markers are the same
+      if (board[0][0] === board[1][1] && board[1][1] === board[2][2]) return true
+      if (board[0][2] === board[1][1] && board[1][1] === board[2][0]) return true
+
+      return false
+    }
+
+    //Run checks and return result
+    //Check rows
+    if (checkRowsForWin()) return true
+
+    //Check columns
+    if (checkColumnsForWin()) return true
+
+    //Check diagonals
+    if (checkDiagonalsForWin()) return true
+
+    return false
+  }
+
   const resetBoard = () => board = [[[], [], []], [[], [], []], [[], [], []]]
 
-  return {getBoard, updateCell, getBoardCell, printBoard, resetBoard}
+  return {getBoard, updateCell, getBoardCell, printBoard, resetBoard, checkForWin}
 };
 
 
@@ -48,29 +93,8 @@ const GameController = (playerOneName, playerTwoName) => {
       console.log(`${getActivePlayer().name}'s turn.`);
     };
 
-  const hasPlayerWon = (board) => {
-    let won = false
-    //Loop through each row and check if the markers are the same
-    board.forEach(row => {
-      if (row[0] === row[1] && row[1] === row[2]) won = true
-    })
-
-    //Loop through each column and check if the markers are the same
-    for (i = 0; i < board.length; ++i) {
-      //Check that the other cells of the column contain the same marker, i === 0 since we only need to loop over one row
-      if (i === 0) {
-        for (j = 0; j < board[i].length; ++j) {
-          if (board[i][j] === board[i+1][j] && board[i+1][j] === board[i+2][j]) won = true
-        }
-      }
-    }
-    //Loop through the diagonals and check if the markers are the same
-    if (board[0][0] === board[1][1] && board[1][1] === board[2][2]) won = true
-    if (board[0][2] === board[1][1] && board[1][1] === board[2][0]) won = true
-
-
-    if (won) return true
-    else return false
+  const hasPlayerWon = () => {
+    return board.checkForWin()
   }
 
   //This function takes the coordinates from selected cell, currently prompting for user input
@@ -92,8 +116,8 @@ const GameController = (playerOneName, playerTwoName) => {
     }
 
     board.updateCell([y, x], marker)
-    if (hasPlayerWon(board.getBoard())) {
-      console.log(`Congratulations ${getActivePlayer()}, YOU WON!`)
+    if (hasPlayerWon()) {
+      console.log(`Congratulations ${getActivePlayer().name}, YOU WON!`)
       board.resetBoard()
     }
 
