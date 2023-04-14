@@ -62,9 +62,19 @@ const GameBoard = () => {
     return false
   }
 
+  const checkForTie = () => {
+    for (i = 0; i < board.length; ++i) {
+      //If board contains empty spots, game hasnt tied
+      for (j = 0; j < board[i].length; ++j) {
+        if (Array.isArray(board[i][j])) return false
+        }
+      }
+    return true
+  }
+
   const resetBoard = () => board = [[[], [], []], [[], [], []], [[], [], []]]
 
-  return {getBoard, updateCell, getBoardCell, printBoard, resetBoard, checkForWin}
+  return {getBoard, updateCell, getBoardCell, printBoard, resetBoard, checkForWin, checkForTie}
 };
 
 
@@ -93,6 +103,10 @@ const GameController = (playerOneName, playerTwoName) => {
     return board.checkForWin()
   }
 
+  const hasGameTied = () => {
+    return board.checkForTie()
+  }
+
   //This function takes the coordinates from selected cell, currently prompting for user input
   const selectCoords = () => {
     return [y, x] = prompt().split(' ')
@@ -114,6 +128,11 @@ const GameController = (playerOneName, playerTwoName) => {
     board.updateCell([y, x], marker)
     if (hasPlayerWon()) {
       console.log(`Congratulations ${getActivePlayer().name}, YOU WON!`)
+      board.resetBoard()
+    }
+
+    else if (hasGameTied()) {
+      console.log('Its a tie!')
       board.resetBoard()
     }
 
