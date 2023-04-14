@@ -47,14 +47,29 @@ const GameController = (playerOneName, playerTwoName) => {
     };
 
   const hasPlayerWon = (board) => {
+    let won = false
     //Loop through each row and check if the markers are the same
     board.forEach(row => {
-      
-    });
+      if (row[0] === row[1] && row[1] === row[2]) {
+        won = true
+      }
+    })
 
     //Loop through each column and check if the markers are the same
-
+    for (i = 0; i < board.length; ++i) {
+      //Check that the other cells of the column contain the same marker, i === 0 since we only need to loop over one row
+      if (i === 0) {
+        for (j = 0; j < board[i].length; ++j) {
+          if (board[i][j] === board[i+1][j] && board[i+1][j] === board[i+2][j]) won = true
+        }
+      }
+    }
     //Loop through the diagonals and check if the markers are the same
+    
+
+
+    if (won) return true
+    else return false
   }
 
   //This function takes the coordinates from selected cell, currently prompting for user input
