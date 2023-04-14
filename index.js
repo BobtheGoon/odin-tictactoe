@@ -50,9 +50,7 @@ const GameController = (playerOneName, playerTwoName) => {
     let won = false
     //Loop through each row and check if the markers are the same
     board.forEach(row => {
-      if (row[0] === row[1] && row[1] === row[2]) {
-        won = true
-      }
+      if (row[0] === row[1] && row[1] === row[2]) won = true
     })
 
     //Loop through each column and check if the markers are the same
@@ -65,7 +63,8 @@ const GameController = (playerOneName, playerTwoName) => {
       }
     }
     //Loop through the diagonals and check if the markers are the same
-    
+    if (board[0][0] === board[1][1] && board[1][1] === board[2][2]) won = true
+    if (board[0][2] === board[1][1] && board[1][1] === board[2][0]) won = true
 
 
     if (won) return true
