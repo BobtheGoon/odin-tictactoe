@@ -4,7 +4,7 @@ const playerFactory = (name, marker) => {
 
 
 const GameBoard = () => {
-  const board = [[[], [], []], [[], [], []], [[], [], []]]
+  let board = [[[], [], []], [[], [], []], [[], [], []]]
 
   const getBoard = () => board
 
@@ -21,7 +21,9 @@ const GameBoard = () => {
     console.log(boardWithValues)
   }
 
-  return {getBoard, updateCell, getBoardCell, printBoard}
+  const resetBoard = () => board = [[[], [], []], [[], [], []], [[], [], []]]
+
+  return {getBoard, updateCell, getBoardCell, printBoard, resetBoard}
 };
 
 
@@ -90,10 +92,15 @@ const GameController = (playerOneName, playerTwoName) => {
     }
 
     board.updateCell([y, x], marker)
-    console.log(hasPlayerWon(board.getBoard()))
+    if (hasPlayerWon(board.getBoard())) {
+      console.log(`Congratulations ${getActivePlayer()}, YOU WON!`)
+      board.resetBoard()
+    }
 
-    switchActivePlayer()
-    printNewRound()
+    else { 
+      switchActivePlayer()
+      printNewRound()
+    }
   }
 
   return {getActivePlayer, playRound}
