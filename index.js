@@ -34,13 +34,9 @@ const GameBoard = () => {
 
     const checkColumnsForWin = () => {
       //Loop through each column and check if the markers are the same
-      for (i = 0; i < board.length; ++i) {
-        //Check that the other cells of the column contain the same marker, i === 0 since we only need to loop over one row
-        if (i === 0) {
-          for (j = 0; j < board[i].length; ++j) {
-            if (board[i][j] === board[i+1][j] && board[i+1][j] === board[i+2][j]) return true
-          }
-        }
+      //Check that the other cells of the column contain the same marker, i === 0 since we only need to loop over one row
+      for (i = 0; i < board[0].length; ++i) {
+        if (board[0][i] === board[1][i] && board[1][i] === board[2][i]) return true
       }
       return false
     }
