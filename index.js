@@ -1,3 +1,15 @@
+const cellCoordToIdMap = {
+  '0' : [0, 0],
+  '1' : [0, 1],
+  '2' : [0, 2],
+  '3' : [1, 0],
+  '4' : [1, 1],
+  '5' : [1, 2],
+  '6' : [2, 0],
+  '7' : [2, 1],
+  '8' : [2, 2],
+}
+
 const playerFactory = (name, marker) => {
   return {name, marker}
 }
@@ -142,11 +154,65 @@ const GameController = (playerOneName, playerTwoName) => {
     }
   }
 
-  return {getActivePlayer, playRound}
+  return {board, getActivePlayer, playRound}
 };
 
 
-const DisplayController = () => {} //We will finish this when working on the GUI
+const DisplayController = () => {
+  /*  1. We need to display the active player
+      2. We need to render the gameboards content that match our GameBoard object
+      3. We need to add event listeners to board cells for clicking
+  */
 
+  //Map to change cell id to x, y coords on grid
+  const cellCoordToIdMap = {
+    '0' : [0, 0],
+    '1' : [0, 1],
+    '2' : [0, 2],
+    '3' : [1, 0],
+    '4' : [1, 1],
+    '5' : [1, 2],
+    '6' : [2, 0],
+    '7' : [2, 1],
+    '8' : [2, 2],
+  }
 
-let game = GameController('Bob', 'Alice')
+  //Add event listeners to cells which trigger a new round to be played and pass in the selected cells coordinates for GameController
+  const addCellEventListeners = () => {
+    const clickBoardCell = (e) => {
+      console.log(e.target)
+      //Convert cell id to cell coordinates
+      const [y, x] = cellCoordToIdMap[e.target.id]
+      //Start the round and pass in the cell coordinates as parameters
+      game.playRound(y, x)
+    }
+    
+    const cellDivs = document.getElementsByClassName('cell')
+    console.log(cellDivs)
+    
+    //Loop over each cell and assign it clickBoardCell as the event listener
+    for (i = 0; i < cellDivs.length; ++i) {
+      cellDivs[i].addEventListener('click', clickBoardCell)
+    }
+  }
+
+  addCellEventListeners()
+  const game = GameController('Bob', 'Alice')
+  const playerTurnDiv = document.getElementById('active-player')
+  const boardDiv = document.getElementById('board')
+  
+  const updateScreen = () => {
+    const renderBoard = (board) => {
+      //Render board values into correct cells
+    }
+
+    const board = game.board.getBoard()
+    renderBoard(board)
+
+    const activePlayer = game.getActivePlayer()
+    playerTurnDiv.textContent = activePlayer.name
+  }
+  updateScreen()
+}
+
+DisplayController()

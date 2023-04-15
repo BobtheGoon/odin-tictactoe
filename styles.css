@@ -1,15 +1,27 @@
+:root {
+    --cell-width: 200px;
+    --cell-height: 200px;
+}
+
 #board {
+    /*height: 100svh;*/
     display: grid;
-    grid-template: 100px 100px 100px / 100px 100px 100px;
+    grid-template: repeat(3, var(--cell-width)) / repeat(3, var(--cell-height));
     justify-content: center;
-    border: solid red;
+    align-content: center;
 }
 
 .cell {
     display: flex;
-    width: 100px;
-    height: 100px;
+    width: var(--cell-width);
+    height: var(--cell-height);
     font-size: 80px;
     border: solid red;
     justify-content: center;
+    align-items: center;
+}
+
+#active-player {
+    text-align: center;
+    font-size: 100px;
 }
