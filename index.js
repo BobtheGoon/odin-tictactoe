@@ -1,15 +1,3 @@
-const cellIdToCoordMap = {
-  '0' : [0, 0],
-  '1' : [0, 1],
-  '2' : [0, 2],
-  '3' : [1, 0],
-  '4' : [1, 1],
-  '5' : [1, 2],
-  '6' : [2, 0],
-  '7' : [2, 1],
-  '8' : [2, 2],
-}
-
 const playerFactory = (name, marker) => {
   return {name, marker}
 }
@@ -151,11 +139,6 @@ const GameController = (playerOneName, playerTwoName) => {
 
 
 const DisplayController = () => {
-  /*  1. We need to display the active player
-      2. We need to render the gameboards content that match our GameBoard object
-      3. We need to add event listeners to board cells for clicking
-  */
-
   //Map to change cell id to x, y coords on grid
   const cellIdToCoordMap = {
     '0' : [0, 0],
@@ -202,7 +185,7 @@ const DisplayController = () => {
 
   //Add event listeners to cells which trigger a new round to be played and pass in the selected cells coordinates for GameController
   const addCellEventListeners = () => {
-
+    //Event listener
     const clickBoardCell = (e) => {
       //Convert cell id to cell coordinates
       const [y, x] = cellIdToCoordMap[e.target.id]
@@ -210,11 +193,13 @@ const DisplayController = () => {
       game.playRound(y, x)
     }
 
+    //Event listeners for div
     const selectCellAndUpdateScreen = (e) => {
       clickBoardCell(e)
       updateScreen()
     }
     
+    //Assign event listeners to cell divs
     const cellDivs = document.getElementsByClassName('cell')    
     //Loop over each cell and assign it clickBoardCell as the event listener
     for (i = 0; i < cellDivs.length; ++i) {
@@ -222,10 +207,11 @@ const DisplayController = () => {
     }
   }
 
-
   addCellEventListeners()
-  const game = GameController('Bob', 'Alice')
   updateScreen()
 }
 
-DisplayController()
+//Main game loop
+//Initialise game and display
+const game = GameController('Bob', 'Alice')
+const display = DisplayController()
