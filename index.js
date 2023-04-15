@@ -183,6 +183,15 @@ const DisplayController = () => {
     playerTurnDiv.textContent = activePlayer.name
   }
 
+  const resetScreen = () => {
+    const cellDivs = document.getElementsByClassName('cell')
+    let cellCounter = 0
+    for (i = 0; i < cellDivs.length; ++i) {
+      cellDivs[cellCounter].textContent = ''
+      cellCounter++
+    }
+  }
+
   //Add event listeners to cells which trigger a new round to be played and pass in the selected cells coordinates for GameController
   const addCellEventListeners = () => {
     //Event listener
@@ -209,6 +218,8 @@ const DisplayController = () => {
 
   addCellEventListeners()
   updateScreen()
+
+  return {resetScreen}
 }
 
 //Main game loop
