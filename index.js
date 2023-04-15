@@ -1,4 +1,4 @@
-const cellCoordToIdMap = {
+const cellIdToCoordMap = {
   '0' : [0, 0],
   '1' : [0, 1],
   '2' : [0, 2],
@@ -119,22 +119,14 @@ const GameController = (playerOneName, playerTwoName) => {
     return board.checkForTie()
   }
 
-  //This function takes the coordinates from selected cell, currently prompting for user input
-  const selectCoords = () => {
-    return [y, x] = prompt().split(' ')
-  }
-
-  const playRound = () => {
+  const playRound = (y, x) => {
     let marker = getActivePlayer().marker
-    let [y, x] = selectCoords()
+    //let [y, x] = selectCoords()
 
     //Check if cell already contains a mark, if so ask for new coordinates
     while (!Array.isArray(board.getBoardCell(y, x))) {
       console.log('Already used!')
-      //Ask for new coordinates
-      const [newY, newX] = selectCoords()
-      y = newY
-      x = newX
+      return
     }
 
     board.updateCell([y, x], marker)
@@ -165,7 +157,7 @@ const DisplayController = () => {
   */
 
   //Map to change cell id to x, y coords on grid
-  const cellCoordToIdMap = {
+  const cellIdToCoordMap = {
     '0' : [0, 0],
     '1' : [0, 1],
     '2' : [0, 2],
@@ -176,42 +168,63 @@ const DisplayController = () => {
     '7' : [2, 1],
     '8' : [2, 2],
   }
+  
+  const renderBoard = (boardArray) => {
+    //Render board values into correct cells
+    const cellDivs = document.getElementsByClassName('cell')
+
+    let cellCounter = 0
+    for (i = 0; i < boardArray.length; ++i) {
+      for (j = 0; j < boardArray[i].length; ++j) {
+        //Get the marker for the position
+        const marker = boardArray[i][j]
+
+        //Check that cell contains a marker and update the cells textcontent
+        if (!Array.isArray(marker)) {
+          cellDivs[cellCounter].textContent = marker
+        }
+        cellCounter++
+      }
+    }
+  }
+
+  //Screen rendering loop
+  const updateScreen = () => {
+    //Update boards content
+    const board = game.board.getBoard()
+    renderBoard(board)
+    
+    //Update active players name on display
+    const activePlayer = game.getActivePlayer()
+    const playerTurnDiv = document.getElementById('active-player')
+    playerTurnDiv.textContent = activePlayer.name
+  }
 
   //Add event listeners to cells which trigger a new round to be played and pass in the selected cells coordinates for GameController
   const addCellEventListeners = () => {
+
     const clickBoardCell = (e) => {
-      console.log(e.target)
       //Convert cell id to cell coordinates
-      const [y, x] = cellCoordToIdMap[e.target.id]
+      const [y, x] = cellIdToCoordMap[e.target.id]
       //Start the round and pass in the cell coordinates as parameters
       game.playRound(y, x)
     }
+
+    const selectCellAndUpdateScreen = (e) => {
+      clickBoardCell(e)
+      updateScreen()
+    }
     
-    const cellDivs = document.getElementsByClassName('cell')
-    console.log(cellDivs)
-    
+    const cellDivs = document.getElementsByClassName('cell')    
     //Loop over each cell and assign it clickBoardCell as the event listener
     for (i = 0; i < cellDivs.length; ++i) {
-      cellDivs[i].addEventListener('click', clickBoardCell)
+      cellDivs[i].addEventListener('click', selectCellAndUpdateScreen)
     }
   }
+
 
   addCellEventListeners()
   const game = GameController('Bob', 'Alice')
-  const playerTurnDiv = document.getElementById('active-player')
-  const boardDiv = document.getElementById('board')
-  
-  const updateScreen = () => {
-    const renderBoard = (board) => {
-      //Render board values into correct cells
-    }
-
-    const board = game.board.getBoard()
-    renderBoard(board)
-
-    const activePlayer = game.getActivePlayer()
-    playerTurnDiv.textContent = activePlayer.name
-  }
   updateScreen()
 }
 
