@@ -78,66 +78,6 @@ const GameBoard = () => {
 };
 
 
-const GameController = (playerOneName, playerTwoName) => {
-  const board = GameBoard()
-
-  //Create players and assign correct marks
-  const players = [
-      playerFactory(playerOneName, 'x'),
-      playerFactory(playerTwoName, 'o')
-  ]
-
-  let activePlayer = players[0]
-  const getActivePlayer = () => activePlayer
-
-  const switchActivePlayer = () => {
-      activePlayer = activePlayer === players[0] ? players[1] : players[0]
-  }
-
-  const printNewRound = () => {
-      board.printBoard();
-      console.log(`${getActivePlayer().name}'s turn.`);
-    };
-
-  const hasPlayerWon = () => {
-    return board.checkForWin()
-  }
-
-  const hasGameTied = () => {
-    return board.checkForTie()
-  }
-
-  const playRound = (y, x) => {
-    let marker = getActivePlayer().marker
-    //let [y, x] = selectCoords()
-
-    //Check if cell already contains a mark, if so ask for new coordinates
-    while (!Array.isArray(board.getBoardCell(y, x))) {
-      console.log('Already used!')
-      return
-    }
-
-    board.updateCell([y, x], marker)
-    if (hasPlayerWon()) {
-      console.log(`Congratulations ${getActivePlayer().name}, YOU WON!`)
-      board.resetBoard()
-    }
-
-    else if (hasGameTied()) {
-      console.log('Its a tie!')
-      board.resetBoard()
-    }
-
-    else { 
-      switchActivePlayer()
-      printNewRound()
-    }
-  }
-
-  return {board, getActivePlayer, playRound}
-};
-
-
 const DisplayController = () => {
   //Map to change cell id to x, y coords on grid
   const cellIdToCoordMap = {
@@ -172,13 +112,12 @@ const DisplayController = () => {
   }
 
   //Screen rendering loop
-  const updateScreen = () => {
+  const updateScreen = (board, getActivePlayer) => {
     //Update boards content
-    const board = game.board.getBoard()
-    renderBoard(board)
+    renderBoard(board.getBoard())
     
     //Update active players name on display
-    const activePlayer = game.getActivePlayer()
+    const activePlayer = getActivePlayer()
     const playerTurnDiv = document.getElementById('active-player')
     playerTurnDiv.textContent = activePlayer.name
   }
@@ -193,36 +132,89 @@ const DisplayController = () => {
   }
 
   //Add event listeners to cells which trigger a new round to be played and pass in the selected cells coordinates for GameController
-  const addCellEventListeners = () => {
+  const addCellEventListeners = (playRound) => {
     //Event listener
     const clickBoardCell = (e) => {
       //Convert cell id to cell coordinates
       const [y, x] = cellIdToCoordMap[e.target.id]
-      //Start the round and pass in the cell coordinates as parameters
-      game.playRound(y, x)
-    }
-
-    //Event listeners for div
-    const selectCellAndUpdateScreen = (e) => {
-      clickBoardCell(e)
-      updateScreen()
+      //Add parameter function as event listener
+      playRound(y, x)
     }
     
     //Assign event listeners to cell divs
     const cellDivs = document.getElementsByClassName('cell')    
     //Loop over each cell and assign it clickBoardCell as the event listener
     for (i = 0; i < cellDivs.length; ++i) {
-      cellDivs[i].addEventListener('click', selectCellAndUpdateScreen)
+      cellDivs[i].addEventListener('click', clickBoardCell)
     }
   }
 
-  addCellEventListeners()
-  updateScreen()
-
-  return {resetScreen}
+  return {updateScreen, resetScreen, addCellEventListeners}
 }
 
+const GameController = (playerOneName, playerTwoName) => {
+  const board = GameBoard()
+  const display = DisplayController()
+
+  //Create players and assign correct marks
+  const players = [
+      playerFactory(playerOneName, 'x'),
+      playerFactory(playerTwoName, 'o')
+  ]
+
+  let activePlayer = players[0]
+  const getActivePlayer = () => activePlayer
+
+  const switchActivePlayer = () => {
+      activePlayer = activePlayer === players[0] ? players[1] : players[0]
+  }
+
+  const printNewRound = () => {
+      board.printBoard();
+      console.log(`${getActivePlayer().name}'s turn.`);
+    };
+
+  const hasPlayerWon = () => {
+    return board.checkForWin()
+  }
+
+  const hasGameTied = () => {
+    return board.checkForTie()
+  }
+
+  const playRound = (y, x) => {
+    let marker = getActivePlayer().marker
+
+    //Check if cell already contains a mark, if so ask for new coordinates
+    while (!Array.isArray(board.getBoardCell(y, x))) {
+      console.log('Already used!')
+      return
+    }
+
+    board.updateCell([y, x], marker)
+    if (hasPlayerWon()) {
+      console.log(`Congratulations ${getActivePlayer().name}, YOU WON!`)
+      display.resetScreen()
+      board.resetBoard()
+    }
+
+    else if (hasGameTied()) {
+      console.log('Its a tie!')
+      display.resetScreen()
+      board.resetBoard()
+    }
+
+    else { 
+      switchActivePlayer()
+      printNewRound()
+      display.updateScreen(board, getActivePlayer)
+    }
+  }
+
+  display.addCellEventListeners(playRound)
+
+  // return {board, getActivePlayer}
+};
+
 //Main game loop
-//Initialise game and display
 const game = GameController('Bob', 'Alice')
-const display = DisplayController()
