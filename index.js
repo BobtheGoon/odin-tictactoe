@@ -217,4 +217,9 @@ const GameController = (playerOneName, playerTwoName) => {
 };
 
 //Main game loop
-const game = GameController('Bob', 'Alice')
+function startGame() {
+  const playerOneName = document.forms["start-game"].elements["player-one"].value 
+  const playerTwoName = document.forms["start-game"].elements["player-two"].value 
+
+  return GameController(playerOneName, playerTwoName)
+}
