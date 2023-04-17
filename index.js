@@ -224,49 +224,19 @@ const GameController = () => {
 };
 
 
-const createPlayerNameInput = (game) => {
+const setPlayerNameEventListener = (game) => {
   const updateNames = (game) => {
-    const playerOneName = document.forms['start-game'].elements['player-one'].value 
-    const playerTwoName = document.forms['start-game'].elements['player-two'].value
+    const playerOneName = document.forms['names'].elements['player-one'].value 
+    const playerTwoName = document.forms['names'].elements['player-two'].value
     
     game.updatePlayerNames(playerOneName, playerTwoName)
   }
 
-  //Create form for playername selection
-  const form = document.createElement('form')
-  form.id ='start-game'
-
-  //Player one
-  const playerOneLabel = document.createElement('label')
-  playerOneLabel.for = 'player-one'
-  playerOneLabel.textContent = 'Player 1 name'
-  const playerOneInput = document.createElement('input')
-  playerOneInput.type = 'text'
-  playerOneInput.id = 'player-one'
-
-  //Player two
-  const playerTwoLabel = document.createElement('label')
-  playerTwoLabel.for = 'player-two'
-  playerTwoLabel.textContent = 'Player 2 name'
-  const playerTwoInput = document.createElement('input')
-  playerTwoInput.type = 'text'
-  playerTwoInput.id = 'player-two'
-
-  //Set name Button
-  const setNameButton = document.createElement('button')
-  setNameButton.for = 'start-game'
-  setNameButton.textContent = 'Start Game'
-  setNameButton.onclick = function(e) {e.preventDefault(); updateNames(game)}
-
-  document.body.appendChild(form)
-  form.appendChild(playerOneLabel)
-  form.appendChild(playerOneInput)
-  form.appendChild(playerTwoLabel)
-  form.appendChild(playerTwoInput)
-  form.appendChild(setNameButton)
+  const setNamesButton = document.getElementById('set-names')
+  setNamesButton.onclick = function(e) {e.preventDefault(); updateNames(game)}
 }
 
 
 //Main game loop
 const game = GameController()
-createPlayerNameInput(game)
+setPlayerNameEventListener(game)

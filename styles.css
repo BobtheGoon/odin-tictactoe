@@ -26,7 +26,7 @@
     font-size: 100px;
 }
 
-#start-game {
+#names {
     display: flex;
     justify-content: center;
     margin-top: 50px;
