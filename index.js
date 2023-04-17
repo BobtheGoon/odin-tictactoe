@@ -211,9 +211,9 @@ const GameController = (playerOneName, playerTwoName) => {
     }
   }
 
+  //Initial render and display
   display.addCellEventListeners(playRound)
-
-  // return {board, getActivePlayer}
+  display.updateScreen(board, getActivePlayer)
 };
 
 //Main game loop
