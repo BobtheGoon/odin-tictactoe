@@ -152,14 +152,14 @@ const DisplayController = () => {
   return {updateScreen, resetScreen, addCellEventListeners}
 }
 
-const GameController = (playerOneName, playerTwoName) => {
+const GameController = () => {
   const board = GameBoard()
   const display = DisplayController()
 
   //Create players and assign correct marks
   const players = [
-      playerFactory(playerOneName, 'x'),
-      playerFactory(playerTwoName, 'o')
+      playerFactory('', 'X'),
+      playerFactory('', 'O')
   ]
 
   let activePlayer = players[0]
@@ -180,6 +180,12 @@ const GameController = (playerOneName, playerTwoName) => {
 
   const hasGameTied = () => {
     return board.checkForTie()
+  }
+
+  const updatePlayerNames = (playerOneName, playerTwoName) => {
+    players[0].name = playerOneName
+    players[1].name = playerTwoName
+    display.updateScreen(board, getActivePlayer)
   }
 
   const playRound = (y, x) => {
@@ -213,13 +219,54 @@ const GameController = (playerOneName, playerTwoName) => {
 
   //Initial render and display
   display.addCellEventListeners(playRound)
-  display.updateScreen(board, getActivePlayer)
+  
+  return {updatePlayerNames}
 };
 
-//Main game loop
-function startGame() {
-  const playerOneName = document.forms["start-game"].elements["player-one"].value 
-  const playerTwoName = document.forms["start-game"].elements["player-two"].value 
 
-  return GameController(playerOneName, playerTwoName)
+const createPlayerNameInput = (game) => {
+  const updateNames = (game) => {
+    const playerOneName = document.forms['start-game'].elements['player-one'].value 
+    const playerTwoName = document.forms['start-game'].elements['player-two'].value
+    
+    game.updatePlayerNames(playerOneName, playerTwoName)
+  }
+
+  //Create form for playername selection
+  const form = document.createElement('form')
+  form.id ='start-game'
+
+  //Player one
+  const playerOneLabel = document.createElement('label')
+  playerOneLabel.for = 'player-one'
+  playerOneLabel.textContent = 'Player 1 name'
+  const playerOneInput = document.createElement('input')
+  playerOneInput.type = 'text'
+  playerOneInput.id = 'player-one'
+
+  //Player two
+  const playerTwoLabel = document.createElement('label')
+  playerTwoLabel.for = 'player-two'
+  playerTwoLabel.textContent = 'Player 2 name'
+  const playerTwoInput = document.createElement('input')
+  playerTwoInput.type = 'text'
+  playerTwoInput.id = 'player-two'
+
+  //Set name Button
+  const setNameButton = document.createElement('button')
+  setNameButton.for = 'start-game'
+  setNameButton.textContent = 'Start Game'
+  setNameButton.onclick = function(e) {e.preventDefault(); updateNames(game)}
+
+  document.body.appendChild(form)
+  form.appendChild(playerOneLabel)
+  form.appendChild(playerOneInput)
+  form.appendChild(playerTwoLabel)
+  form.appendChild(playerTwoInput)
+  form.appendChild(setNameButton)
 }
+
+
+//Main game loop
+const game = GameController()
+createPlayerNameInput(game)
