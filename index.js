@@ -250,7 +250,7 @@ const setPlayerNameEventListener = (game) => {
   setNamesButton.onclick = function(e) {e.preventDefault(); updateNames(game)}
 }
 
-const resetBoardEventListener = (game) => {
+const setResetBoardEventListener = (game) => {
   const resetBoard = (game) => {
     game.resetGame()
   }
@@ -262,4 +262,4 @@ const resetBoardEventListener = (game) => {
 //Main game setup
 const game = GameController()
 setPlayerNameEventListener(game)
-resetBoardEventListener(game)
+setResetBoardEventListener(game)
