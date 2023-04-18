@@ -31,3 +31,9 @@
     justify-content: center;
     margin-top: 50px;
 }
+
+#board-controlls {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}

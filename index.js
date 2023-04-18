@@ -110,16 +110,19 @@ const DisplayController = () => {
       }
     }
   }
+  
+  const updateActivePlayer = (getActivePlayer) => {
+    //Update active players name on display
+    const activePlayer = getActivePlayer()
+    const playerTurnDiv = document.getElementById('active-player')
+    playerTurnDiv.textContent = activePlayer.name
+  }
 
   //Screen rendering loop
   const updateScreen = (board, getActivePlayer) => {
     //Update boards content
     renderBoard(board.getBoard())
-    
-    //Update active players name on display
-    const activePlayer = getActivePlayer()
-    const playerTurnDiv = document.getElementById('active-player')
-    playerTurnDiv.textContent = activePlayer.name
+    updateActivePlayer(getActivePlayer)
   }
 
   const resetScreen = () => {
@@ -149,7 +152,7 @@ const DisplayController = () => {
     }
   }
 
-  return {updateScreen, resetScreen, addCellEventListeners}
+  return {updateScreen, resetScreen, updateActivePlayer, addCellEventListeners}
 }
 
 const GameController = () => {
@@ -169,10 +172,23 @@ const GameController = () => {
       activePlayer = activePlayer === players[0] ? players[1] : players[0]
   }
 
+  const setXActivePlayer = () => {
+    if (activePlayer.marker != 'X') {
+      switchActivePlayer()
+      display.updateActivePlayer(getActivePlayer)
+    }
+  }
+
   const printNewRound = () => {
       board.printBoard();
       console.log(`${getActivePlayer().name}'s turn.`);
     };
+
+  const resetGame = () => {
+    display.resetScreen()
+    board.resetBoard()
+    setXActivePlayer()
+  }
 
   const hasPlayerWon = () => {
     return board.checkForWin()
@@ -200,14 +216,12 @@ const GameController = () => {
     board.updateCell([y, x], marker)
     if (hasPlayerWon()) {
       console.log(`Congratulations ${getActivePlayer().name}, YOU WON!`)
-      display.resetScreen()
-      board.resetBoard()
+      resetGame()
     }
 
     else if (hasGameTied()) {
       console.log('Its a tie!')
-      display.resetScreen()
-      board.resetBoard()
+      resetGame()
     }
 
     else { 
@@ -220,7 +234,7 @@ const GameController = () => {
   //Initial render and display
   display.addCellEventListeners(playRound)
   
-  return {updatePlayerNames}
+  return {updatePlayerNames, resetGame}
 };
 
 
@@ -236,7 +250,16 @@ const setPlayerNameEventListener = (game) => {
   setNamesButton.onclick = function(e) {e.preventDefault(); updateNames(game)}
 }
 
+const resetBoardEventListener = (game) => {
+  const resetBoard = (game) => {
+    game.resetGame()
+  }
 
-//Main game loop
+  const resetBoardButton = document.getElementById('reset')
+  resetBoardButton.onclick = function() {resetBoard(game)}
+}
+
+//Main game setup
 const game = GameController()
 setPlayerNameEventListener(game)
+resetBoardEventListener(game)
