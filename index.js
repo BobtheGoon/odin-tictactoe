@@ -134,6 +134,27 @@ const DisplayController = () => {
     }
   }
 
+  const setResetBoardEventListener = (resetGame) => {
+    const resetBoard = () => {
+      resetGame()
+    }
+  
+    const resetBoardButton = document.getElementById('reset')
+    resetBoardButton.onclick = function() {resetBoard()}
+  }
+
+  const setPlayerNameEventListener = (updatePlayerNames) => {
+    const updateNames = () => {
+      const playerOneName = document.forms['names'].elements['player-one'].value 
+      const playerTwoName = document.forms['names'].elements['player-two'].value
+      
+      updatePlayerNames(playerOneName, playerTwoName)
+    }
+  
+    const setNamesButton = document.getElementById('set-names')
+    setNamesButton.onclick = function(e) {e.preventDefault(); updateNames()}
+  }
+
   //Add event listeners to cells which trigger a new round to be played and pass in the selected cells coordinates for GameController
   const addCellEventListeners = (playRound) => {
     //Event listener
@@ -152,7 +173,7 @@ const DisplayController = () => {
     }
   }
 
-  return {updateScreen, resetScreen, updateActivePlayer, addCellEventListeners}
+  return {updateScreen, resetScreen, updateActivePlayer, addCellEventListeners, setResetBoardEventListener, setPlayerNameEventListener}
 }
 
 const GameController = () => {
@@ -233,33 +254,13 @@ const GameController = () => {
 
   //Initial render and display
   display.addCellEventListeners(playRound)
+  display.setResetBoardEventListener(resetGame)
+  display.setPlayerNameEventListener(updatePlayerNames)
   
   return {updatePlayerNames, resetGame}
 };
 
 
-const setPlayerNameEventListener = (game) => {
-  const updateNames = (game) => {
-    const playerOneName = document.forms['names'].elements['player-one'].value 
-    const playerTwoName = document.forms['names'].elements['player-two'].value
-    
-    game.updatePlayerNames(playerOneName, playerTwoName)
-  }
-
-  const setNamesButton = document.getElementById('set-names')
-  setNamesButton.onclick = function(e) {e.preventDefault(); updateNames(game)}
-}
-
-const setResetBoardEventListener = (game) => {
-  const resetBoard = (game) => {
-    game.resetGame()
-  }
-
-  const resetBoardButton = document.getElementById('reset')
-  resetBoardButton.onclick = function() {resetBoard(game)}
-}
 
 //Main game setup
 const game = GameController()
-setPlayerNameEventListener(game)
-setResetBoardEventListener(game)
