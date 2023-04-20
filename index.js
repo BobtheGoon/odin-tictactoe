@@ -134,16 +134,23 @@ const DisplayController = () => {
     }
   }
 
+  const clearEndDisplay = () => {
+    div = document.getElementById('end-display')
+    div.remove()
+  }
+
   const displayEndScreen = (activePlayer, tie=false) => {
     div = document.createElement('div')
     div.id = 'end-display'
 
+    //Check if game was a tie
     if (!tie) {
       div.textContent = `Congratulations ${activePlayer}, you WON!`
     }
     else div.textContent = 'Its a tie!'
     
     document.body.appendChild(div)
+    setTimeout(clearEndDisplay, 5000)
   }
 
   const setResetBoardEventListener = (resetGame) => {
