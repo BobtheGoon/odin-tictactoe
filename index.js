@@ -134,6 +134,18 @@ const DisplayController = () => {
     }
   }
 
+  const displayEndScreen = (activePlayer, tie=false) => {
+    div = document.createElement('div')
+    div.id = 'end-display'
+
+    if (!tie) {
+      div.textContent = `Congratulations ${activePlayer}, you WON!`
+    }
+    else div.textContent = 'Its a tie!'
+    
+    document.body.appendChild(div)
+  }
+
   const setResetBoardEventListener = (resetGame) => {
     const resetBoard = () => {
       resetGame()
@@ -173,7 +185,7 @@ const DisplayController = () => {
     }
   }
 
-  return {updateScreen, resetScreen, updateActivePlayer, addCellEventListeners, setResetBoardEventListener, setPlayerNameEventListener}
+  return {updateScreen, resetScreen, updateActivePlayer, addCellEventListeners, setResetBoardEventListener, setPlayerNameEventListener, displayEndScreen}
 }
 
 const GameController = () => {
@@ -236,12 +248,12 @@ const GameController = () => {
 
     board.updateCell([y, x], marker)
     if (hasPlayerWon()) {
-      console.log(`Congratulations ${getActivePlayer().name}, YOU WON!`)
+      display.displayEndScreen(getActivePlayer().name)
       resetGame()
     }
 
     else if (hasGameTied()) {
-      console.log('Its a tie!')
+      display.displayEndScreen(getActivePlayer().name, true)
       resetGame()
     }
 
@@ -252,7 +264,7 @@ const GameController = () => {
     }
   }
 
-  //Initial render and display
+  //Setup eventlisteners for ui
   display.addCellEventListeners(playRound)
   display.setResetBoardEventListener(resetGame)
   display.setPlayerNameEventListener(updatePlayerNames)

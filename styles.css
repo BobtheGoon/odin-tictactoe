@@ -37,3 +37,9 @@
     justify-content: center;
     margin-top: 50px;
 }
+
+#end-display {
+    text-align: center;
+    margin-top: 50px;
+    font-weight: bolder;
+}
