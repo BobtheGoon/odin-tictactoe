@@ -134,7 +134,7 @@ const DisplayController = () => {
     }
   }
 
-  const clearEndDisplay = () => {
+  const clearEndScreen = () => {
     div = document.getElementById('end-display')
     div.remove()
   }
@@ -150,7 +150,7 @@ const DisplayController = () => {
     else div.textContent = 'Its a tie!'
     
     document.body.appendChild(div)
-    setTimeout(clearEndDisplay, 5000)
+    setTimeout(clearEndScreen, 5000)
   }
 
   const setResetBoardEventListener = (resetGame) => {
@@ -278,7 +278,6 @@ const GameController = () => {
   
   return {updatePlayerNames, resetGame}
 };
-
 
 
 //Main game setup

@@ -1,27 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
 :root {
     --cell-width: 200px;
     --cell-height: 200px;
+    font-family: 'Roboto';
 }
 
 #board {
-    /*height: 100svh;*/
     display: grid;
     grid-template: repeat(3, var(--cell-width)) / repeat(3, var(--cell-height));
     justify-content: center;
     align-content: center;
+    margin-top: 100px;
 }
 
 .cell {
+    font-family: 'Shadows Into Light', cursive;
     display: flex;
     width: var(--cell-width);
     height: var(--cell-height);
-    font-size: 80px;
-    border: solid red;
+    font-size: 10rem;
+    border: solid black;
     justify-content: center;
     align-items: center;
 }
 
 #active-player {
+    height: 168px;
     text-align: center;
     font-size: 100px;
 }
@@ -29,7 +35,16 @@
 #names {
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+}
+
+#names > div {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 0 20px;
+}
+
+#set-name-button {
+    justify-content: flex-end;
 }
 
 #board-controlls {
@@ -42,4 +57,5 @@
     text-align: center;
     margin-top: 50px;
     font-weight: bolder;
+    font-size: 50px;
 }
